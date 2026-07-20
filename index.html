@@ -13,31 +13,33 @@
     <!-- Open Graph (Social Media Links) -->
     <meta property="og:title" content="Fancy Text Generator - Stylish Fonts for Bio">
     <meta property="og:description" content="Create cool fancy fonts and copy paste them anywhere instantly!">
-</head>
 
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,sans-serif; }
-  body { background:#0f172a; color:#fff; padding:20px; }
-  .container { max-width:600px; margin:auto; text-align:center; margin-bottom:20px; }
-  .font-size32px { font-size:32px; }
-  textarea { width:100%; background:#1e293b; color:#fff; border:none; outline:none; padding:15px; border-radius:8px; font-size:16px; header:none; min-height:120px; }
-  .result { margin-top:25px; }
-  .card { background:#1e293b; border-radius:12px; padding:15px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; }
-  .card:hover { flex:1; word-break:break-word; font-size:20px; }
-  button { background:#3b82f6; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer; transition:.2s; }
-  button:hover { background:#2563eb; }
-  .styleName { width:120px; color:#94a3b8; font-size:14px; }
-  .textContainer { flex:1; text-align:left; }
-  .card { flex-direction:column; align-items:flex-start; }
-  .styleName { width:auto; }
-  button { width:100%; }
-  .card { font-size:16px; }
-</style>
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+      body { background:#0f172a; color:#fff; padding:20px; min-height:100vh; }
+      .container { max-width:650px; margin:0 auto; text-align:center; padding-bottom:40px; }
+      .title { font-size:32px; font-weight:700; margin-bottom:8px; color:#f8fafc; }
+      .subtitle { color:#94a3b8; font-size:14px; margin-bottom:20px; }
+      textarea { width:100%; background:#1e293b; color:#fff; border:1px solid #334155; outline:none; padding:15px; border-radius:10px; font-size:16px; min-height:100px; resize:vertical; }
+      textarea:focus { border-color:#3b82f6; }
+      .result { margin-top:20px; display:flex; flex-direction:column; gap:12px; }
+      .card { background:#1e293b; border:1px solid #334155; border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:15px; text-align:left; }
+      .styleName { width:130px; color:#94a3b8; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; flex-shrink:0; }
+      .textContainer { flex:1; font-size:18px; color:#f1f5f9; word-break:break-all; }
+      button { background:#3b82f6; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:600; cursor:pointer; transition:0.2s; flex-shrink:0; }
+      button:hover { background:#2563eb; }
+      @media (max-width: 480px) {
+        .card { flex-direction:column; align-items:flex-start; gap:10px; }
+        .styleName { width:100%; }
+        button { width:100%; text-align:center; }
+      }
+    </style>
+</head>
 
 <body>
   <div class="container">
-    <h1 class="font-size32px">Fancy Text Generator</h1>
-    <p style="color: #94a3b8; margin-top: 5px; margin-bottom: 20px;">Type anything below and copy stylish unicode fonts instantly.</p>
+    <h1 class="title">Fancy Text Generator</h1>
+    <p class="subtitle">Type anything below and copy stylish unicode fonts instantly.</p>
     <textarea id="userInput" placeholder="Type or paste text here..." oninput="generateFonts()"></textarea>
     <div class="result" id="output"></div>
   </div>
@@ -46,31 +48,107 @@
     const input = document.getElementById('userInput');
     const output = document.getElementById('output');
 
-    const styles = [
-      { name: "Normal", transform: (t) => t },
-      { name: "Bold", transform: (text) => convert(text, 0x1D400, 0x1D41A, 0x1D7CE) },
-      { name: "Italic", transform: (text) => convert(text, 0x1D434, 0x1D44E) },
-      { name: "Bold Italic", transform: (text) => convert(text, 0x1D468, 0x1D482) },
-      { name: "Monospace", transform: (text) => convert(text, 0x1D670, 0x1D68A, 0x1D7F6) },
-      { name: "Double Struck", transform: (text) => convert(text, 0x1D538, 0x1D552, 0x1D7D8) },
-      { name: "Fraktur", transform: (text) => convert(text, 0x1D504, 0x1D51E) }
-    ];
-
-    function convert(text, upperStart, lowerStart, numberStart) {
-      return Array.from(text).map(char => {
-        const code = char.charCodeAt(0);
-        if (code >= 65 && code <= 90) return String.fromCodePoint(upperStart + (code - 65));
-        if (code >= 97 && code <= 122) return String.fromCodePoint(lowerStart + (code - 97));
-        if (numberStart && code >= 48 && code <= 57) return String.fromCodePoint(numberStart + (code - 48));
-        return char;
-      }).join('');
+    function convertCustom(text, mapObj) {
+      return Array.from(text).map(char => mapObj[char] || char).join('');
     }
+
+    const boldMap = {
+      'A':'𝗔','B':'𝗕','C':'𝗖','D':'𝗗','E':'𝗘','F':'𝗙','G':'𝗚','H':'𝗛','I':'𝗜','J':'𝗝','K':'𝗞','L':'𝗟','M':'𝗠','N':'𝗡','O':'𝗢','P':'𝗣','Q':'𝗤','R':'𝗥','S':'𝗦','T':'𝗧','U':'𝗨','V':'𝗩','W':'𝗪','X':'𝗫','Y':'𝗬','Z':'𝗭',
+      'a':'𝗮','b':'𝗯','c':'𝗰','d':'𝗱','e':'𝗲','f':'𝗳','g':'𝗴','h':'𝗵','i':'𝗶','j':'𝗷','k':'𝗸','l':'𝗹','m':'𝗺','n':'𝗻','o':'𝗼','p':'𝗽','q':'𝗾','r':'𝗿','s':'𝘀','t':'𝘁','u':'𝘂','v':'𝘃','w':'𝘄','x':'𝘁','y':'𝘆','z':'𝘇',
+      '0':'𝟬','1':'𝟭','2':'𝟮','3':'𝟯','4':'𝟰','5':'𝟱','6':'𝟲','7':'𝟳','8':'𝟴','9':'𝟵'
+    };
+
+    const italicMap = {
+      'A':'𝘈','B':'𝘉','C':'𝘊','D':'𝘋','E':'𝘌','F':'𝘍','G':'𝘎','H':'𝘏','I':'𝘐','J':'𝘑','K':'𝘒','L':'𝘓','M':'𝘔','N':'𝘝','O':'𝘖','P':'𝘎','Q':'𝘘','R':'𝘘','S':'𝘠','T':'𝘛','U':'𝘜','V':'𝘝','W':'𝘞','X':'𝘟','Y':'𝘠','Z':'𝘡',
+      'a':'𝘢','b':'𝘣','c':'𝘤','d':'𝘥','e':'𝘦','f':'𝘧','g':'𝘨','h':'𝘩','i':'𝘪','j':'𝘫','k':'𝘬','l':'𝘭','m':'𝘮','n':'𝘯','o':'𝘰','p':'𝘱','q':'𝘲','r':'𝘳','s':'𝘴','t':'𝘵','u':'𝘶','v':'𝘷','w':'𝘸','x':'𝘹','y':'𝘺','z':'𝘻'
+    };
+
+    const boldItalicMap = {
+      'A':'𝘼','B':'𝘽','C':'𝘾','D':'𝘿','E':'𝙀','F':'𝙁','G':'𝙂','H':'𝙃','I':'𝙄','J':'𝙅','K':'𝙆','L':'𝙇','M':'𝙈','N':'𝙉','O':'𝙊','P':'𝙋','Q':'𝙌','R':'𝙍','S':'𝙎','T':'𝙏','U':'𝙐','V':'𝙑','W':'𝙒','X':'𝙯','Y':'𝙔','Z':'𝙕',
+      'a':'𝙖','b':'𝙗','c':'𝙘','d':'𝙙','e':'𝙚','f':'𝙛','g':'𝙜','h':'𝙝','i':'𝙞','j':'𝙟','k':'𝙠','l':'𝙡','m':'𝙢','n':'𝙣','o':'𝙤','p':'𝙥','q':'𝙦','r':'𝙧','s':'𝙨','t':'𝙩','u':'𝙪','v':'𝙫','w':'𝙬','x':'𝙭','y':'𝙮','z':'𝙯'
+    };
+
+    const monospaceMap = {
+      'A':'𝙰','B':'𝙱','C':'𝙲','D':'𝙳','E':'𝙴','F':'𝙵','G':'𝙶','H':'𝙷','I':'𝙸','J':'𝙹','K':'𝙺','L':'𝙻','M':'𝙼','N':'𝙽','O':'𝙾','P':'𝙿','Q':'𝙺','R':'𝚁','S':'𝚂','T':'𝚃','U':'𝚄','V':'𝚅','W':'𝚆','X':'𝚇','Y':'𝚈','Z':'𝚉',
+      'a':'𝚊','b':'𝚋','c':'𝚌','d':'𝚍','e':'𝚎','f':'𝚏','g':'𝚐','h':'𝚑','i':'𝚒','j':'𝚓','k':'𝚔','l':'𝚕','m':'𝚖','n':'𝚗','o':'𝚘','p':'𝚙','q':'𝚚','r':'𝚛','s':'𝚜','t':'𝚝','u':'𝚞','v':'𝚟','w':'𝚠','x':'𝚡','y':'𝚢','z':'𝚣',
+      '0':'𝟶','1':'𝟷','2':'𝟸','3':'𝟹','4':'𝟺','5':'𝟻','6':'𝟼','7':'𝟽','8':'𝟾','9':'𝟿'
+    };
+
+    const circledMap = {
+      'A':'Ⓐ','B':'Ⓑ','C':'Ⓒ','D':'Ⓓ','E':'Ⓔ','F':'Ⓕ','G':'Ⓖ','H':'Ⓗ','I':'Ⓘ','J':'Ⓙ','K':'Ⓚ','L':'Ⓛ','M':'Ⓜ','N':'Ⓝ','O':'Ⓞ','P':'Ⓟ','Q':'Ⓠ','R':'Ⓡ','S':'Ⓢ','T':'Ⓣ','U':'Ⓤ','V':'Ⓥ','W':'Ⓦ','X':'Ⓧ','Y':'Ⓨ','Z':'Ⓩ',
+      'a':'ⓐ','b':'ⓑ','c':'ⓒ','d':'ⓓ','e':'ⓔ','f':'ⓕ','g':'ⓖ','h':'ⓗ','i':'ⓘ','j':'ⓙ','k':'ⓚ','l':'ⓛ','m':'ⓜ','n':'ⓝ','o':'ⓞ','p':'ⓟ','q':'ⓠ','r':'ⓡ','s':'ⓢ','t':'ⓣ','u':'ⓤ','v':'ⓥ','w':'ⓦ','x':'ⓧ','y':'ⓨ','z':'ⓩ',
+      '0':'⓪','1':'①','2':'②','3':'③','4':'④','5':'⑤','6':'⑥','7':'⑦','8':'⑧','9':'⑨'
+    };
+
+    const darkBubbleMap = {
+      'A':'🅐','B':'🅑','C':'🅒','D':'🅓','E':'🅔','F':'🅕','G':'🅖','H':'🅗','I':'🅘','J':'🅙','K':'🅚','L':'🅛','M':'🅜','N':'🅝','O':'🅞','P':'🅟','Q':'🅠','R':'🅡','S':'🅢','T':'🅣','U':'🅤','V':'🅥','W':'🅦','X':'🅧','Y':'🅨','Z':'🅩',
+      'a':'🅐','b':'🅑','c':'🅒','d':'🅓','e':'🅔','f':'🅕','g':'🅖','h':'🅗','i':'🅘','j':'🅙','k':'🅚','l':'🅛','m':'🅜','n':'🅝','o':'🅞','p':'🅟','q':'🅠','r':'🅡','s':'🅢','t':'🅣','u':'🅤','v':'🅥','w':'🅦','x':'🅧','y':'🅨','z':'🅩',
+      '0':'⓿','1':'❶','2':'❷','3':'❸','4':'❹','5':'❺','6':'❻','7':'❼','8':'❽','9':'❾'
+    };
+
+    const squaredMap = {
+      'A':'🄰','B':'🄱','C':'🄲','D':'🄳','E':'🄴','F':'🄵','G':'🄷','H':'🄷','I':'🄸','J':'🄹','K':'🄺','L':'🄻','M':'🄼','N':'🄽','O':'🄾','P':'🄿','Q':'🅀','R':'🅁','S':'🅂','T':'🅃','U':'🅄','V':'🅅','W':'🅆','X':'🅇','Y':'🅈','Z':'🅉',
+      'a':'🄰','b':'🄱','c':'🄲','d':'🄳','e':'🄴','f':'🄵','g':'🄷','h':'🄷','i':'🄸','j':'🄹','k':'🄺','l':'🄻','m':'🄼','n':'🄽','o':'🄾','p':'🄿','q':'🅀','r':'🅁','s':'🅂','t':'🅃','u':'🅄','v':'🅅','w':'🅆','x':'🅇','y':'🅈','z':'🅉'
+    };
+
+    const darkSquareMap = {
+      'A':'🅰','B':'🅱','C':'🅂','D':'🄳','E':'🄴','F':'🄵','G':'🄶','H':'🄷','I':'🄸','J':'🄹','K':'🄺','L':'🄻','M':'🄼','N':'🄽','O':'🅾','P':'🅿','Q':'🅀','R':'🅁','S':'🅂','T':'🅃','U':'🅄','V':'🅅','W':'🅆','X':'🅇','Y':'🅈','Z':'🅉',
+      'a':'🅰','b':'🅱','c':'🅂','d':'🄳','e':'🄴','f':'🄵','g':'🄶','h':'🄷','i':'🄸','j':'🄹','k':'🄺','l':'🄻','m':'🄼','n':'🄽','o':'🅾','p':'🅿','q':'🅀','r':'🅁','s':'🅂','t':'🅃','u':'🅄','v':'🅅','w':'🅆','x':'🅇','y':'🅈','z':'🅉'
+    };
+
+    const doubleStruckMap = {
+      'A':'𝔸','B':'𝔹','C':'ℂ','D':'𝔻','E':'𝔼','F':'𝔽','G':'𝔾','H':'ℍ','I':'𝕀','J':'𝕁','K':'𝕂','L':'𝕃','M':'𝕄','N':'ℕ','O':'𝕆','P':'ℙ','Q':'ℚ','R':'ℝ','S':'𝕊','T':'𝕋','U':'𝕌','V':'𝕍','W':'𝕎','X':'𝕏','Y':'𝕐','Z':'ℤ',
+      'a':'𝕒','b':'𝕓','c':'𝕔','d':'𝕕','e':'𝕖','f':'𝕗','g':'𝕘','h':'𝕙','i':'𝕚','j':'𝕛','k':'𝕜','l':'𝕝','m':'𝕞','n':'𝕟','o':'𝕠','p':'𝕡','q':'𝕢','r':'𝕣','s':'𝕤','t':'𝕥','u':'𝕦','v':'𝕧','w':'𝕨','x':'𝕩','y':'𝕪','z':'𝕫',
+      '0':'𝟘','1':'𝟙','2':'𝟚','3':'𝟛','4':'𝟜','5':'𝟝','6':'𝟞','7':'𝟟','8':'𝟠','9':'𝟡'
+    };
+
+    const frakturMap = {
+      'A':'𝔄','B':'𝔅','C':'ℭ','D':'𝔇','E':'𝔈','F':'𝔉','G':'𝔊','H':'ℌ','I':'ℑ','J':'𝔍','K':'𝔏','L':'𝔏','M':'𝔐','N':'𝔑','O':'𝔒','P':'𝔓','Q':'𝔔','R':'ℜ','S':'𝔖','T':'𝔗','U':'𝔘','V':'𝔙','W':'𝔚','X':'𝔛','Y':'𝔜','Z':'ℨ',
+      'a':'𝔞','b':'𝔟','c':'𝔠','d':'𝔡','e':'𝔢','f':'𝔣','g':'𝔤','h':'𝔥','i':'𝔦','j':'𝔟','k':'𝔨','l':'𝔩','m':'𝔪','n':'𝔫','o':'𝔬','p':'𝔭','q':'𝔮','r':'𝔯','s':'𝔰','t':'𝔱','u':'𝔲','v':'𝔳','w':'𝔴','x':'𝔵','y':'𝔶','z':'𝔷'
+    };
+
+    const scriptMap = {
+      'A':'𝒜','B':'ℬ','C':'𝒞','D':'𝒟','E':'ℰ','F':'ℱ','G':'𝒢','H':'ℋ','I':'ℐ','J':'𝒥','K':'𝒦','L':'ℒ','M':'ℳ','N':'𝒩','O':'𝒪','P':'𝒫','Q':'𝒬','R':'ℛ','S':'𝒮','T':'𝒯','U':'𝒰','V':'𝒱','W':'𝒲','X':'𝒳','Y':'𝒴','Z':'𝒵',
+      'a':'𝒶','b':'𝒷','c':'𝒸','d':'𝒹','e':'ℯ','f':'𝒻','g':'ℊ','h':'𝒽','i':'𝒾','j':'𝒿','k':'𝓀','l':'𝓁','m':'𝓂','n':'𝓃','o':'ℴ','p':'𝓅','q':'𝓆','r':'𝓇','s':'𝓈','t':'𝓉','u':'𝓊','v':'𝓋','w':'𝓌','x':'𝓍','y':'𝓎','z':'𝓏'
+    };
+
+    const smallCapsMap = {
+      'A':'ᴀ','B':'ʙ','C':'ᴄ','D':'ᴅ','E':'ᴇ','F':'ғ','G':'ɢ','H':'ʜ','I':'ɪ','J':'ᴊ','K':'ᴋ','L':'ʟ','M':'ᴍ','N':'ɴ','O':'ᴏ','P':'ᴘ','Q':'ǫ','R':'ʀ','S':'s','T':'ᴛ','U':'ᴜ','V':'ᴠ','W':'ᴡ','X':'x','Y':'ʏ','Z':'ᴢ',
+      'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ғ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'s','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ'
+    };
+
+    const superscriptMap = {
+      'A':'ᴬ','B':'ᴮ','C':'ᶜ','D':'ᴰ','E':'ᴱ','F':'ᶠ','G':'ᴳ','H':'ᴴ','I':'ᴵ','J':'ᴶ','K':'ᴷ','L':'ᴸ','M':'ᴹ','N':'ᴺ','O':'ᴼ','P':'ᴾ','Q':'Q','R':'ᴿ','S':'ˢ','T':'ᵀ','U':'ᵁ','V':'ⱽ','W':'ᵂ','X':'ˣ','Y':'ʸ','Z':'ᶻ',
+      'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ','k':'ᵏ','l':'ˡ','m':'ᵐ','n':'ⁿ','o':'ᵒ','p':'ᵖ','q':'ᑫ','r':'ʳ','s':'ˢ','t':'ᵗ','u':'ᵘ','v':'ᵛ','w':'ʷ','x':'ˣ','y':'ʸ','z':'ᶻ',
+      '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'
+    };
+
+    const styles = [
+      { name: "Bold", transform: (t) => convertCustom(t, boldMap) },
+      { name: "Italic", transform: (t) => convertCustom(t, italicMap) },
+      { name: "Bold Italic", transform: (t) => convertCustom(t, boldItalicMap) },
+      { name: "Monospace", transform: (t) => convertCustom(t, monospaceMap) },
+      { name: "Handwriting", transform: (t) => convertCustom(t, scriptMap) },
+      { name: "Double Struck", transform: (t) => convertCustom(t, doubleStruckMap) },
+      { name: "Gothic / Fraktur", transform: (t) => convertCustom(t, frakturMap) },
+      { name: "Circled", transform: (t) => convertCustom(t, circledMap) },
+      { name: "Dark Bubble", transform: (t) => convertCustom(t, darkBubbleMap) },
+      { name: "Squared", transform: (t) => convertCustom(t, squaredMap) },
+      { name: "Dark Square", transform: (t) => convertCustom(t, darkSquareMap) },
+      { name: "Small Caps", transform: (t) => convertCustom(t, smallCapsMap) },
+      { name: "Tiny / Super", transform: (t) => convertCustom(t, superscriptMap) },
+      { name: "Strikethrough", transform: (t) => Array.from(t).map(c => c + '̶').join('') },
+      { name: "Underline", transform: (t) => Array.from(t).map(c => c + '̲').join('') },
+      { name: "Slash Through", transform: (t) => Array.from(t).map(c => c + '̷').join('') },
+      { name: "Wide Spacing", transform: (t) => Array.from(t).join(' ') },
+      { name: "Reverse Text", transform: (t) => Array.from(t).reverse().join('') }
+    ];
 
     function generateFonts() {
       const text = input.value;
       output.innerHTML = '';
 
-      styles.forEach((style, index) => {
+      styles.forEach((style) => {
         const card = document.createElement('div');
         card.className = 'card';
 
