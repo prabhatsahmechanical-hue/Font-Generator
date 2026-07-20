@@ -13,310 +13,88 @@
     <!-- Open Graph (Social Media Links) -->
     <meta property="og:title" content="Fancy Text Generator - Stylish Fonts for Bio">
     <meta property="og:description" content="Create cool fancy fonts and copy paste them anywhere instantly!">
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI,sans-serif;
-}
-body{
-    background:#0f172a;
-    color:#fff;
-    padding:20px;
-}
-.container{
-    max-width:900px;
-    margin:auto;
-}
-h1{
-    text-align:center;
-    margin-bottom:20px;
-    font-size:32px;
-}
-.subtitle{
-    text-align:center;
-    color:#94a3b8;
-    margin-bottom:25px;
-}
-textarea{
-    width:100%;
-    background:#1e293b;
-    color:#fff;
-    border:none;
-    outline:none;
-    padding:15px;
-    border-radius:12px;
-    font-size:18px;
-    resize:none;
-    min-height:120px;
-}
-
-.results{
-    margin-top:25px;
-}
-
-.card{
-    background:#1e293b;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.text{
-    flex:1;
-    word-break:break-word;
-    font-size:20px;
-}
-
-button{
-    background:#3b82f6;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:.25s;
-}
-button:hover{
-    background:#2563eb;
-}
-
-.styleName{
-    width:120px;
-    color:#94a3b8;
-    font-size:14px;
-}
-
-@media(max-width:700px){
-.card{
-flex-direction:column;
-align-items:flex-start;
-}
-.styleName{
-width:auto;
-}
-button{
-width:100%;
-}
-.text{
-font-size:18px;
-}
-}
-</style>
 </head>
 
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,sans-serif; }
+  body { background:#0f172a; color:#fff; padding:20px; }
+  .container { max-width:600px; margin:auto; text-align:center; margin-bottom:20px; }
+  .font-size32px { font-size:32px; }
+  textarea { width:100%; background:#1e293b; color:#fff; border:none; outline:none; padding:15px; border-radius:8px; font-size:16px; header:none; min-height:120px; }
+  .result { margin-top:25px; }
+  .card { background:#1e293b; border-radius:12px; padding:15px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; }
+  .card:hover { flex:1; word-break:break-word; font-size:20px; }
+  button { background:#3b82f6; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer; transition:.2s; }
+  button:hover { background:#2563eb; }
+  .styleName { width:120px; color:#94a3b8; font-size:14px; }
+  .textContainer { flex:1; text-align:left; }
+  .card { flex-direction:column; align-items:flex-start; }
+  .styleName { width:auto; }
+  button { width:100%; }
+  .card { font-size:16px; }
+</style>
+
 <body>
+  <div class="container">
+    <h1 class="font-size32px">Fancy Text Generator</h1>
+    <p style="color: #94a3b8; margin-top: 5px; margin-bottom: 20px;">Type anything below and copy stylish unicode fonts instantly.</p>
+    <textarea id="userInput" placeholder="Type or paste text here..." oninput="generateFonts()"></textarea>
+    <div class="result" id="output"></div>
+  </div>
 
-<div class="container">
+  <script>
+    const input = document.getElementById('userInput');
+    const output = document.getElementById('output');
 
-<h1>✨ Fancy Text Generator</h1>
-<p class="subtitle">Type anything below and copy stylish Unicode fonts instantly.</p>
+    const styles = [
+      { name: "Normal", transform: (t) => t },
+      { name: "Bold", transform: (text) => convert(text, 0x1D400, 0x1D41A, 0x1D7CE) },
+      { name: "Italic", transform: (text) => convert(text, 0x1D434, 0x1D44E) },
+      { name: "Bold Italic", transform: (text) => convert(text, 0x1D468, 0x1D482) },
+      { name: "Monospace", transform: (text) => convert(text, 0x1D670, 0x1D68A, 0x1D7F6) },
+      { name: "Double Struck", transform: (text) => convert(text, 0x1D538, 0x1D552, 0x1D7D8) },
+      { name: "Fraktur", transform: (text) => convert(text, 0x1D504, 0x1D51E) }
+    ];
 
-<textarea id="input" placeholder="Type your text here...">Hello World</textarea>
-
-<div class="results" id="results"></div>
-
-</div>
-
-<script>
-const fonts = [
-  {
-    name:"Normal",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    targetLower:"abcdefghijklmnopqrstuvwxyz",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Bold",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭",
-    targetLower:"𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇",
-    targetNumber:"𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵"
-  },
-  {
-    name:"Italic",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡",
-    targetLower:"𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Bold Italic",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕",
-    targetLower:"𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Monospace",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉",
-    targetLower:"𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣",
-    targetNumber:"𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿"
-  },
-  {
-    name:"Double",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ",
-    targetLower:"𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫",
-    targetNumber:"𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡"
-  },
-  {
-    name:"Fraktur",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ",
-    targetLower:"𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Bold Fraktur",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅",
-    targetLower:"𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Circled",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ",
-    targetLower:"ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ",
-    targetNumber:"⓪①②③④⑤⑥⑦⑧⑨"
-  },
-  {
-    name:"Squared",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉",
-    targetLower:"abcdefghijklmnopqrstuvwxyz",
-    targetNumber:"0123456789"
-  },
-  {
-    name:"Tiny",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ",
-    targetLower:"ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ",
-    targetNumber:"⁰¹²³⁴⁵⁶⁷⁸⁹"
-  },
-  {
-    name:"Bubble",
-    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lower:"abcdefghijklmnopqrstuvwxyz",
-    number:"0123456789",
-    targetUpper:"🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩",
-    targetLower:"🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩",
-    targetNumber:"⓿❶❷❸❹❺❻❼❽❾"
-  },
-  {
-    name:"Strikethrough",
-    custom:true,
-    func:t=>t.split('').join('̶')
-  },
-  {
-    name:"Underline",
-    custom:true,
-    func:t=>t.split('').join('̲')
-  },
-  {
-    name:"Spacing",
-    custom:true,
-    func:t=>t.split('').join(' ')
-  },
-  {
-    name:"Reverse",
-    custom:true,
-    func:t=>[...t].reverse().join('')
-  }
-];
-
-function convert(text, font) {
-  if (font.custom) return font.func(text);
-
-  const tUpper = Array.from(font.targetUpper);
-  const tLower = Array.from(font.targetLower);
-  const tNumber = Array.from(font.targetNumber);
-
-  let result = "";
-
-  for (let ch of text) {
-    let i = font.upper.indexOf(ch);
-    if (i !== -1) {
-      result += tUpper[i] || ch;
-      continue;
+    function convert(text, upperStart, lowerStart, numberStart) {
+      return Array.from(text).map(char => {
+        const code = char.charCodeAt(0);
+        if (code >= 65 && code <= 90) return String.fromCodePoint(upperStart + (code - 65));
+        if (code >= 97 && code <= 122) return String.fromCodePoint(lowerStart + (code - 97));
+        if (numberStart && code >= 48 && code <= 57) return String.fromCodePoint(numberStart + (code - 48));
+        return char;
+      }).join('');
     }
 
-    i = font.lower.indexOf(ch);
-    if (i !== -1) {
-      result += tLower[i] || ch;
-      continue;
+    function generateFonts() {
+      const text = input.value;
+      output.innerHTML = '';
+
+      styles.forEach((style, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const convertedText = style.transform(text || "Hello World");
+
+        card.innerHTML = `
+          <div class="styleName">${style.name}</div>
+          <div class="textContainer">${convertedText}</div>
+          <button onclick="copyText('${convertedText.replace(/'/g, "\\'")}', this)">Copy</button>
+        `;
+
+        output.appendChild(card);
+      });
     }
 
-    i = font.number.indexOf(ch);
-    if (i !== -1) {
-      result += tNumber[i] || ch;
-      continue;
-    }
-
-    result += ch;
-  }
-
-  return result;
-}
-
-function render() {
-  const value = document.getElementById("input").value;
-  const results = document.getElementById("results");
-  results.innerHTML = "";
-
-  fonts.forEach(font => {
-    const output = convert(value, font);
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <div class="styleName">${font.name}</div>
-      <div class="text">${output}</div>
-      <button>Copy</button>
-    `;
-
-    div.querySelector("button").onclick = () => {
-      navigator.clipboard.writeText(output);
-      div.querySelector("button").innerText = "Copied ✓";
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text);
+      btn.innerText = "Copied!";
       setTimeout(() => {
-        div.querySelector("button").innerText = "Copy";
-      }, 1200);
-    };
+        btn.innerText = "Copy";
+      }, 1500);
+    }
 
-    results.appendChild(div);
-  });
-}
-
-document.getElementById("input").addEventListener("input", render);
-render();
-</script>
+    generateFonts();
+  </script>
+</body>
+</html>
